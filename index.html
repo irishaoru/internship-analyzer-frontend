@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7f9">
+  <title>Internship Analyzer — Find your next step</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="config.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="site-header"><a class="brand" href="./"><span class="brand-mark" aria-hidden="true">ia<span>↗</span></span>Internship Analyzer</a><span class="header-note">A little clarity for your next big step.</span><button class="text-button" id="help-button">How it works <span aria-hidden="true">↗</span></button></header>
+  <main>
+    <div class="intro"><span class="eyebrow"><span class="green-dot"></span> YOUR NEXT CHAPTER STARTS HERE</span><h1>Find the fit.<br><span>Make your next move.</span></h1><p>Turn an internship description into a clearer picture of your fit,<br class="desktop-break"> your strengths, and what to work on next.</p></div>
+    <div class="workspace">
+      <section class="input-panel" aria-labelledby="input-title">
+        <div class="panel-heading"><div><span class="eyebrow">LET’S GET STARTED</span><h2 id="input-title">A little about the opportunity</h2></div><span class="step-pill">01 / 02</span></div>
+        <form id="analyzer-form">
+          <div class="field-row"><div class="field"><label for="role">Internship title <span class="optional">Optional</span></label><input id="role" name="role" placeholder="e.g. Software Engineering Intern" maxlength="160"></div><div class="field"><label for="company">Company <span class="optional">Optional</span></label><input id="company" name="company" placeholder="e.g. Spotify" maxlength="160"></div></div>
+          <div class="field"><div class="label-row"><label for="description">Internship description <span class="required">*</span></label><button type="button" class="small-link" id="sample-button">Try an example ↗</button></div><textarea id="description" name="description" rows="8" required minlength="50" maxlength="30000" placeholder="Paste the internship description here. Include responsibilities, qualifications, and any skills they’re looking for…" aria-describedby="description-hint"></textarea><div class="field-meta"><span id="description-hint">The more detail, the clearer the picture.</span><span id="description-count">0 / 30,000</span></div></div>
+          <div class="section-divider"></div>
+          <div class="resume-heading"><span class="number-badge">02</span><div><h3>Bring your experience into the picture</h3><p>Add your resume text to compare it with the opportunity.</p></div></div>
+          <div class="field"><label for="resume">Your resume <span class="required">*</span></label><textarea id="resume" name="resume" rows="6" required minlength="50" maxlength="30000" placeholder="Paste your resume text, including your education, skills, projects, and experience…" aria-describedby="privacy-note"></textarea></div>
+          <p class="privacy-note" id="privacy-note"><span aria-hidden="true">⌑</span> Your text stays in this page until you run an analysis. Nothing is saved by this frontend.</p>
+          <p id="form-status" class="form-status" role="status" aria-live="polite"></p>
+          <div class="form-actions"><button type="button" id="reset-button" class="text-button">↻ &nbsp;Start Over</button><button type="submit" id="analyze-button" class="primary-button">Analyze my fit <span aria-hidden="true">↗</span></button></div>
+        </form>
+      </section>
+      <aside class="results-panel" aria-labelledby="results-title"><div class="results-heading"><span class="eyebrow">THE BIGGER PICTURE</span><span class="sparkle" aria-hidden="true">✧</span></div><h2 id="results-title">Your next step,<br>a little clearer.</h2><p class="results-subtitle">Good opportunities start with understanding where you stand.</p>
+        <div id="empty-results"><div class="illustration" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="floating-dot dot-one"></div><div class="floating-dot dot-two"></div><div class="paper"><div class="paper-icon">↗</div><div class="paper-line long"></div><div class="paper-line"></div><div class="paper-divider"></div><div class="paper-check">✓ <span></span></div><div class="paper-check">✓ <span></span></div><div class="paper-check muted">＋ <span></span></div></div><div class="match-chip">✧ &nbsp; Find your potential</div></div><div class="what-you-get"><h3>More than a match score</h3><div class="benefit"><span>◎</span><div><h4>Understand your fit</h4><p>See how your experience aligns with the role.</p></div></div><div class="benefit"><span>✧</span><div><h4>Recognize your strengths</h4><p>Find the skills and experience to lead with.</p></div></div><div class="benefit"><span>↗</span><div><h4>Know what comes next</h4><p>Get practical ways to strengthen your application.</p></div></div></div><div class="empty-note">Your analysis will appear here.<br>Start with an opportunity that interests you.</div></div>
+        <div id="analysis-results" hidden tabindex="-1"><span id="result-badge" class="result-badge"></span><h3 id="result-role"></h3><div id="result-content"></div><button id="download-button" class="secondary-button" type="button">Download analysis ↓</button></div>
+      </aside>
+    </div>
+    <footer><span>Built for the beginning of something great.</span><span>One opportunity at a time. <span class="footer-star">✧</span></span></footer>
+  </main>
+  <dialog id="help-dialog"><button id="close-help" class="dialog-close" aria-label="Close help">×</button><span class="eyebrow">A CLEARER PATH FORWARD</span><h2>How it works</h2><ol><li>Paste the internship description.</li><li>Add the text from your resume.</li><li>Analyze the fit and review your next steps.</li></ol><p>The example lets you explore a sample result. Live analysis requires your backend endpoint to be configured.</p><button id="help-done" class="primary-button">Got it</button></dialog>
+</body>
+</html>
