@@ -12,16 +12,15 @@ Open http://localhost:8000. Static hosting can serve these files directly withou
 
 ## Connect the backend
 
-The Render API could not be inspected during development. No route or response schema has been verified, so live requests are disabled until configured. The sample uses illustrative data and never calls the backend.
+The frontend sends POST requests to `https://internship-analyzer.onrender.com/api/analyze`.
+`config.js` maps form values to `resume`, `job_description`, and optional `cover_letter`.
+It maps the backend response to the categorical rating, evidence, document feedback, and next steps.
+Role and company are used as display labels only.
 
-In `config.js`:
-
-1. Set `endpoint` to the verified analysis route.
-2. Adjust `buildRequest` to the backend’s expected JSON fields. The supplied field names are placeholders, not a verified contract.
-3. Adjust `normalizeResponse` to return `{ summary, match_score, strengths, gaps, recommendations }`. `match_score` is an optional number from 0 to 100; the lists should contain strings. Unmapped nonempty JSON objects appear as a backend response for debugging.
-4. Enable CORS on the backend for the deployed frontend origin (and http://localhost:8000 during development), including POST, OPTIONS, and Content-Type.
-
-The client sends a POST with JSON and waits up to 90 seconds for Render startup. If the backend uses file uploads, authentication, or a different method, update the request implementation in `app.js` after confirming the contract. Never put a secret API key into client-side files.
+Set `CORS_ORIGINS=https://irishaoru.github.io` in Render for GitHub Pages hosting.
+For local testing, add `http://localhost:8000` as a comma-separated origin.
+Requests time out after 150 seconds to allow for service startup. No API key belongs in frontend code.
+The example preview does not call the backend. Edit a field after loading an example to use live analysis.
 
 ## Manual checks
 
@@ -33,4 +32,4 @@ The client sends a POST with JSON and waits up to 90 seconds for Render startup.
 - Check narrow mobile and wide desktop layouts and keyboard focus.
 - Once connected, verify successful responses, HTTP errors, unreachable backend, timeouts, and resetting during an active request.
 
-API integration and browser interaction checks require the backend contract and a browser runtime; they have not yet been verified.
+The request/response mapping follows the Flask backend schema. A live browser analysis is still needed to verify the deployed service and CORS configuration.

@@ -13,7 +13,7 @@ const example = {
 const sampleResult = { summary: 'Your web development projects align with the core responsibilities of this example internship. Lead with your API integration experience and team project.', strengths: ['HTML, CSS, and JavaScript experience', 'REST API integration in a campus events application', 'Git collaboration and code reviews'], gaps: ['React experience is not mentioned in this resume.', 'Automated testing experience is not mentioned.'], recommendations: ['Explain your contribution to the campus events project and its impact.', 'Add a small React project to demonstrate familiarity.', 'Practice testing a key interaction in one of your projects.'] };
 
 function status(message, error = false) { $('form-status').textContent = message; $('form-status').classList.toggle('error', error); }
-function updateCount() { $('description-count').textContent = `${$('description').value.length.toLocaleString()} / 30,000`; }
+function updateCount() { $('description-count').textContent = `${$('description').value.length.toLocaleString()} / 20,000`; }
 function setBusy(busy) { $('analyze-button').disabled = busy; $('analyze-button').textContent = busy ? 'Analyzing…' : exampleMode ? 'Preview example ↗' : 'Analyze my fit ↗'; form.setAttribute('aria-busy', String(busy)); }
 function clearResults() { currentResult = null; $('analysis-results').hidden = true; $('empty-results').hidden = false; }
 function addSection(title, value) {
@@ -30,6 +30,20 @@ function renderResult(result, sample, context) {
   $('result-badge').textContent = sample ? 'EXAMPLE · NOT A LIVE ANALYSIS' : 'ANALYSIS COMPLETE';
   $('result-role').textContent = [context.role, context.company].filter(Boolean).join(' at ') || 'Your internship analysis';
   if (typeof result.match_score === 'number' && result.match_score >= 0 && result.match_score <= 100) addSection('Match score', `${result.match_score}%`);
+  addSection('Overall match', result.rating);
+  addSection('Why this rating', result.reasoning);
+  addSection('Requirement evidence', result.requirements);
+  for (const [title, feedback] of [['Resume', result.resume_feedback], ['Cover letter', result.cover_letter_feedback]]) {
+    if (!feedback) continue;
+    if (title === 'Cover letter') addSection('Cover letter strengths', feedback.strengths);
+    for (const item of feedback.improvements || []) {
+      addSection(`${title}: ${item.location} (${item.priority} priority)`, [
+        ...(item.current_text ? [`Current wording: ${item.current_text}`] : []),
+        `What to improve: ${item.issue}`, `Suggested change: ${item.suggested_change}`,
+        `Example revision: ${item.example_revision}`,
+      ]);
+    }
+  }
   addSection('The overview', result.summary); addSection('Your strengths', result.strengths); addSection('Room to grow', result.gaps); addSection('Your next steps', result.recommendations);
   if (!$('result-content').children.length) addSection('Backend response', result);
   $('analysis-results').focus({ preventScroll: true });
@@ -45,11 +59,12 @@ form.addEventListener('submit', async (event) => {
   const config = window.ANALYZER_CONFIG;
   if (!config?.endpoint) { status('Live analysis is not connected yet. Your text has not been sent. Use “Try an example” to explore a sample result.', true); return; }
   controller?.abort(); const request = new AbortController(); controller = request; setBusy(true); clearResults(); status('Analyzing your experience. The server may take a moment to wake up.');
-  const timeout = setTimeout(() => request.abort(), 90000);
+  const timeout = setTimeout(() => request.abort(), 150000);
   try {
     const response = await fetch(new URL(config.endpoint, config.baseUrl), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(config.buildRequest(values)), signal: request.signal });
-    if (!response.ok) throw new Error(`The server returned an error (${response.status}). Please try again.`);
-    const result = config.normalizeResponse(await response.json());
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error?.message || `The server returned an error (${response.status}). Please try again.`);
+    const result = config.normalizeResponse(data);
     if (controller !== request) return;
     if (!result || typeof result !== 'object' || Array.isArray(result) || !Object.keys(result).length) throw new Error('The server returned an unexpected response. Please check the API response mapping.');
     renderResult(result, false, values); status('Analysis complete.');
